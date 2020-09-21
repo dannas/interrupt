@@ -66,7 +66,7 @@ TGT_CPPFLAGS += $(INCLUDES) $(OPENCM3_DEFS)
 TGT_CFLAGS += $(OPT) $(CSTD) -ggdb3
 TGT_CFLAGS += $(ARCH_FLAGS)
 TGT_CFLAGS += -fno-common
-TGT_CFLAGS += -ffunction-sections -fdata-sections
+#TGT_CFLAGS += -ffunction-sections -fdata-sections
 TGT_CFLAGS += -Wextra -Wshadow -Wno-unused-variable -Wimplicit-function-declaration
 TGT_CFLAGS += -Wredundant-decls -Wstrict-prototypes -Wmissing-prototypes
 
@@ -81,7 +81,7 @@ TGT_ASFLAGS += $(OPT) $(ARCH_FLAGS) -ggdb3
 TGT_LDFLAGS += -T$(LDSCRIPT) -L$(OPENCM3_DIR)/lib -nostartfiles
 TGT_LDFLAGS += $(ARCH_FLAGS)
 TGT_LDFLAGS += -specs=nano.specs
-TGT_LDFLAGS += -Wl,--gc-sections
+#TGT_LDFLAGS += -Wl,--gc-sections
 # OPTIONAL
 #TGT_LDFLAGS += -Wl,-Map=$(PROJECT).map
 ifeq ($(V),99)
