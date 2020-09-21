@@ -72,7 +72,7 @@ def decode_file_line(dwarfinfo, address):
             prevstate = entry.state
     return None, None
 
-def find_line(dwarfinfo, address):
+def find_line(dwarfinfo , address):
     """ Return information about a line on the form:
 
         filename:line  content
@@ -113,10 +113,6 @@ def find_function_range(dwarfinfo, name):
                 continue
     return 0, 0
 
-elf = ELF('example/debugging-optimized-code/renode-example.elf')
-print_sizes(elf)
-dwarfinfo = DWARF(elf)
-
 def disassemble(elf, name):
     """ Print source code intermixed with disassembly."""
     low_pc, high_pc = find_function_range(DWARF(elf), name)
@@ -132,10 +128,12 @@ def disassemble(elf, name):
     md = capstone.Cs(CS_ARCH_ARM, CS_MODE_THUMB)
     prev = ''
     for i in md.disasm(data, low_pc):
-        line = find_line(dwarfinfo, i.address)
+        line = find_line(DWARF(elf), i.address)
         if line != prev and line:
             print(line, end='')
         prev = line
         print("0x%x:\t%s\t%s" %(i.address, i.mnemonic, i.op_str))
 
+elf = ELF('example/debugging-optimized-code/renode-example.elf')
+print_sizes(elf)
 disassemble(elf, b'main')
