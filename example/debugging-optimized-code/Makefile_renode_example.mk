@@ -1,7 +1,7 @@
 PROJECT = renode-example
 BUILD_DIR = bin
 
-CFILES = renode-example.c
+CFILES = renode-example.c add.c
 
 DEVICE=stm32f407vgt6
 OOCD_FILE = board/stm32f4discovery.cfg
