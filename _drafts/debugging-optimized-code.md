@@ -25,7 +25,7 @@ Then, we will debug an example application using GDB.
 
 <!-- excerpt end -->
 
-Optional motivation to continue onwards
+TODO: Optional motivation to continue onwards
 
 {% include newsletter.html %}
 
@@ -49,8 +49,14 @@ Given this assembly instruction, how can I know which function it belongs to?
 We need a way to traverse the call stack and know where we came from.
 Given this stack location, which functions call frame am I inside?
 
+## Example Project Setup
+* STM32F4 Discovery board running emulated on Renode
+* GDB 7.11.90 as our debugger
+* GCC 9.2.1 / GNU Arm Embedded as our compiler
+* GNU Make as our build system
+
 ## The DWARF data format
-The DWARF debugging format is a complex one, with a specification weighing in at close to 500 pages.
+The DWARF debugging format is complex, with a specification weighing in at close to 500 pages.
 It's complex since it's designed to cater to the needs of many different programming languages.
 While originally designed for C, it's also used by C++, Fortran, Go, Swift, Rust, and many more.
 
@@ -108,15 +114,37 @@ loop:
 	goto loop;
 done:
 
-### Instruction selection
-
-### Dataflow optimizations
 
 ## Mapping lines
 Gcc marks source lines in the GIMPLE output using the `gimple_build_debug_begin_stmt` macro.
 Gcc calls `gimple_build_debug_begin_stmt` from https://code.woboq.org/gcc/gcc/gimplify.c.html#11897 
 Gcc uses `gimple_build_debug_bind` for marking variables.
 These are inserted per compiler pass.
+
+Objdump, gdb and gcc uses different code paths for displaying disasembly.
+
+Objdump maps addresses to filenames and line numbers using the `.line_table`.
+The line table is a matrix.
+Objdump scans it looking for the last row that matches the address.
+Objdump also keeps track of which lines have been seen in a file in the `print_file_list` struct.
+It uses that to determine if lines preceeding the match should be printed or not.
+It needs some extra logic in the face of inlined functions.
+
+Gdb can show the line mapping using
+```
+(gdb) info line func
+(gdb) info line *addr
+```
+
+Gdb can show assembly intermixed with source lines using the /m or /s options.
+The /m option has been deprecated. It displays a source centric view, which is not very useful
+The /s shows inlined functions from other files and provides a asm in pc access order
+```
+(gdb) disassemble /m func
+(gdb) disassemble /s func
+```
+
+Gdb can determine where to place a breakpoint using...
 
 Here is example output for  a contrived function `add2`.
 Note how each statement is annotated in the gimple output.
@@ -146,7 +174,11 @@ $ dwarfdump add.c
 0x00000008  [   4, 1] ET
 ```
 
+## Tail calls
+If you call a function as the last statement in a function, then the call may be 
+
 ## Relabelling
+TODO: Probably for another post
 It would be useful to have in DWARF a way to mark where local variable is unavailable,
 but is known to be unchanged from some earlier point in the code.
 It would also be useful if DWARF had a tag for marking where a variable has not been initialized.
@@ -159,9 +191,9 @@ You can't get the return value of an inlined function
 ## Reordering
 
 ## Quality of debug info
+TODO: Probably for another post
 
 ## Conclusion
-
 
 
 <!-- Interrupt Keep START -->
