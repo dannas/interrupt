@@ -134,6 +134,6 @@ def disassemble(elf, name):
         prev = line
         print("0x%x:\t%s\t%s" %(i.address, i.mnemonic, i.op_str))
 
-elf = ELF('example/debugging-optimized-code/renode-example.elf')
+elf = ELF('example/debugging-optimized-code/optimization-example.elf')
 print_sizes(elf)
 disassemble(elf, b'main')

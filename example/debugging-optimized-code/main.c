@@ -85,5 +85,5 @@ int main(void) {
         }
     }
 
-    return add1(42);
+    return 0;
 }
